@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle:
+title: IFFE-team
+subtitle: 互联网金融前端团队
 description:
 author: John Doe
-language:
-timezone:
+language: zh-cn
+timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
-root: /blog
+url: https://iffe-team.github.io/blog
+root: /blog/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -69,5 +69,5 @@ theme: landscape
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://kainy:a2c0e900guotao7fc424e53dca52443cb8f4ab43f29f8@github.com/iffe-team/blog.git
+  repo: git@github.com:iffe-team/iffe-team.github.io.git
   branch: gh-pages

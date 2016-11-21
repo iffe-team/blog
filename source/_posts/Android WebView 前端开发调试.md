@@ -1,4 +1,5 @@
 title: Android WebView 前端开发调试
+date: 2016-6-21 06:06:46
 ---
 
 这篇是之前写的东东，因为iffe博客出问题，所以一直存着，今天借大师开的Github页发出来，PPT是上次应小龙邀请做移动端调试方法分享时准备的，一起放上来😄
@@ -9,7 +10,7 @@ title: Android WebView 前端开发调试
  
 Xposed的原理是利用动态劫持，通过替换/system/bin/app_process程序控制zygote进程，使得app_process在启动过程中会加载XposedBridge.jar这个jar包，从而完成对Zygote进程及其创建的Dalvik虚拟机的劫持。
  
-<span id="more-2743"></span>
+<!--more-->
  
 Xposed的安装在[这篇文章](//sspai.com/24538)中已经介绍了很清楚，这里不赘述。下面截几个过程中的图
  
