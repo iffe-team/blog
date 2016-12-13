@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>平安内网标装机远程调试安卓webview的方法 | IFFE-team</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="由于安全策略限制，我们的开发机只能连入内网，且需要经过标装。
+平安内部主要用到两张网，一张是办公开发用的PA_WLAN，另一张是移动设备接入的MA网，开发机与测试机由于不在同一网段，也就只能上演人鬼情未了了（用Mac开发的土豪例外）；
+另一方面，标装过的机器木有管理员权限，无法通过共享wifi给手机来创建局域网环境，于是另一条路被宣告堵死。
+以往的方法都不灵，只能另辟蹊径咯~ 最终希望寄托在连通二">
+<meta property="og:type" content="article">
+<meta property="og:title" content="平安内网标装机远程调试安卓webview的方法">
+<meta property="og:url" content="https://iffe.js.org/blog/2016/01/03/平安内网标装机远程调试安卓webview的方法/index.html">
+<meta property="og:site_name" content="IFFE-team">
+<meta property="og:description" content="由于安全策略限制，我们的开发机只能连入内网，且需要经过标装。
+平安内部主要用到两张网，一张是办公开发用的PA_WLAN，另一张是移动设备接入的MA网，开发机与测试机由于不在同一网段，也就只能上演人鬼情未了了（用Mac开发的土豪例外）；
+另一方面，标装过的机器木有管理员权限，无法通过共享wifi给手机来创建局域网环境，于是另一条路被宣告堵死。
+以往的方法都不灵，只能另辟蹊径咯~ 最终希望寄托在连通二">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/7a2d487c57fa72a290ce41a1d65d42af.png">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/0d090881e4633f59e460b353553aa8ca.jpg">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/0d4e25d348f6c1ee7c929b2c9423bc18.jpg">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/564feabd2260bb3208ef99206ae489f8.jpg">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/0c1d947659ef874b5dc848f600241926.jpg">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/2201bd030fe674a53f69ccb0862c8b64.jpg">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/9877ff22b5f74ef5a6450767fcdcf3bc.jpg">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/5b3e164808cf6fd89973f38fd9bb101c.jpg">
+<meta property="og:image" content="http://kainy-migs.stor.sinaapp.com/original/cb87eec44182dd0370992051828be327.jpg">
+<meta property="og:updated_time" content="2016-12-13T02:32:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="平安内网标装机远程调试安卓webview的方法">
+<meta name="twitter:description" content="由于安全策略限制，我们的开发机只能连入内网，且需要经过标装。
+平安内部主要用到两张网，一张是办公开发用的PA_WLAN，另一张是移动设备接入的MA网，开发机与测试机由于不在同一网段，也就只能上演人鬼情未了了（用Mac开发的土豪例外）；
+另一方面，标装过的机器木有管理员权限，无法通过共享wifi给手机来创建局域网环境，于是另一条路被宣告堵死。
+以往的方法都不灵，只能另辟蹊径咯~ 最终希望寄托在连通二">
+<meta name="twitter:image" content="http://kainy-migs.stor.sinaapp.com/original/7a2d487c57fa72a290ce41a1d65d42af.png">
+  
+    <link rel="alternative" href="/atom.xml" title="IFFE-team" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+
+  <link rel="stylesheet" href="/blog/css/style.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-6311572-4', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">IFFE-team</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">互联网金融前端团队</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://iffe.js.org/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-平安内网标装机远程调试安卓webview的方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2016/01/03/平安内网标装机远程调试安卓webview的方法/" class="article-date">
+  <time datetime="2016-01-02T22:06:46.000Z" itemprop="datePublished">2016-01-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/建站❤编程/">建站❤编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      平安内网标装机远程调试安卓webview的方法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>由于安全策略限制，我们的开发机只能连入内网，且需要经过标装。</p>
+<p>平安内部主要用到两张网，一张是办公开发用的PA_WLAN，另一张是移动设备接入的MA网，开发机与测试机由于不在同一网段，也就只能上演人鬼情未了了（用Mac开发的土豪例外）；</p>
+<p>另一方面，标装过的机器木有管理员权限，无法通过共享wifi给手机来创建局域网环境，于是另一条路被宣告堵死。</p>
+<p>以往的方法都不灵，只能另辟蹊径咯~ 最终希望寄托在连通二者的USB线。</p>
+<a id="more"></a>
+<p>于是问题转化为：<strong>如何通过USB线实现开发机与测试手机通信，让手机的流量通过USB线走开发机网络</strong>。</p>
+<h3 id="先介绍解题思路"><a href="#先介绍解题思路" class="headerlink" title="先介绍解题思路"></a>先介绍解题思路</h3><ol>
+<li>通过Chrome的远程调试工具连通手机和开发机，实现通信；</li>
+<li>将手机流量通过代理指向开发机端口；</li>
+<li>开发机监听端口，接收代理流量</li>
+</ol>
+<h3 id="具体操作步骤"><a href="#具体操作步骤" class="headerlink" title="具体操作步骤"></a>具体操作步骤</h3><p><strong>针对第一点</strong>，标装机需要安装ADB驱动（没有管理员权限的话到idesk搜索“Android”安装第一个搜索结果）</p>
+<p>[caption id=”” align=”alignnone” width=”507”]<a href="http://kainy-migs.stor.sinaapp.com/original/7a2d487c57fa72a290ce41a1d65d42af.png" target="_blank" rel="external"><img src="http://kainy-migs.stor.sinaapp.com/original/7a2d487c57fa72a290ce41a1d65d42af.png" alt=""></a> 安装之后，勾选“Extras”下的“Google USB Driver package”，然后安装。[/caption]</p>
+<p>安装之后的操作；</p>
+<ol>
+<li>开启当前Android设备的USB调试模式</li>
+<li>开发机上安装Chrome浏览器（版本&gt;=32）</li>
+<li>用USB线连接Android设备，在PC或MAC上的Chrome地址栏输入chrome://inspect 然后回车，或通过菜单图标→工具→检查设备，进入调试界面</li>
+<li>勾选界面中的 Discover USB devices ，直到搜索到你的Android设备</li>
+<li>在移动设备上弹出的是否允许远程调试上，选择“允许”</li>
+<li>在下面的页面列表（将展示已在Android上的Chrome中打开的页面），点击对应的 inspect 开始调试</li>
+<li>此时将在桌面版Chrome上弹出一个新的标签页，即为调试界面；<br>[caption id=”” align=”alignnone” width=”507”]<img src="http://kainy-migs.stor.sinaapp.com/original/0d090881e4633f59e460b353553aa8ca.jpg" alt=""> 连通后的效果是这样的~[/caption]</li>
+</ol>
+<p>这样以后，开发机的Chrome开发者工具就可以远程调试手机上的Chrome页面，但仅限于Chrome。接下来解决手机APP联网和流量抓包的问题。</p>
+<p><strong>第二点的实现</strong>，得借助一款叫做“Transparent Proxy”的软件实现（需root权限），配置全局代理后，所有APP的流量就都指向Chrome的8888端口了；</p>
+<p>需要注意的是：开发机与手机之间网络连接需要靠大小Chrome通奸来维持，所以即使不是调试手机版Chrome网页，也要保持手机Chrome后台运行状态（即 保持上图中的小绿点常亮）</p>
+<p>[caption id=”” align=”alignnone” width=”267”]<a href="http://kainy-migs.stor.sinaapp.com/original/0d4e25d348f6c1ee7c929b2c9423bc18.jpg" target="_blank" rel="external"><img src="http://kainy-migs.stor.sinaapp.com/original/0d4e25d348f6c1ee7c929b2c9423bc18.jpg" alt=""></a> 需要如图配置三个地方[/caption]</p>
+<p><strong>第三点</strong>，到目前为止，手机上的流量已经全部转向台式机的Chrome，接下来要做的，是将台式机Chrome接收到的流量转到我们熟悉的抓包工具——Fiddler上</p>
+<p>[caption id=”” align=”alignnone” width=”274”]<img src="http://kainy-migs.stor.sinaapp.com/original/564feabd2260bb3208ef99206ae489f8.jpg" alt=""> Chrome的配置[/caption]</p>
+<p>Fiddler的配置方法就不介绍了，不懂的百度一下，记得勾选“Allow remote computers to connect”哦。</p>
+<p>[caption id=”” align=”alignnone” width=”508”]<a href="http://kainy-migs.stor.sinaapp.com/original/0c1d947659ef874b5dc848f600241926.jpg" target="_blank" rel="external"><img src="http://kainy-migs.stor.sinaapp.com/original/0c1d947659ef874b5dc848f600241926.jpg" alt=""></a> 财富宝APP的抓包，从User-Agent值可以看到系统和内核信息[/caption]</p>
+<p>目前我们用较多的是console.re 和blog.qqbrowser.cc的方案；</p>
+<ul>
+<li>方案一本质是模拟console，依赖第三方服务器且存在网络延迟问题，功能也远不及Chrome开发者工具强大；</li>
+<li>方案二需要安装鹅厂产品，不过相比带来的调试便利，这点推广还算良心。另外这个方案只能调试内核使用x5的APP，如微信、QQ空间等，且对APP版本有要求，如微信6.1以后才支持x5内核。<br>相比之下，咱们这套方法有三个优势：</li>
+</ul>
+<ol>
+<li>不需要专门去安装个QQ浏览器用于调试（对于办公机内存吃紧如我的同学而言还是蛮赞的）；</li>
+<li>不仅限于X5内核，可调试所有安卓应用中的webview；</li>
+<li>手机使用开发机网络，无需MA账号，妈妈再也不用担心你的手机流量~</li>
+</ol>
+<h3 id="最终实现的效果"><a href="#最终实现的效果" class="headerlink" title="最终实现的效果"></a>最终实现的效果</h3><p>[caption id=”” align=”alignnone” width=”508”]<a href="http://kainy-migs.stor.sinaapp.com/original/2201bd030fe674a53f69ccb0862c8b64.jpg" target="_blank" rel="external"><img src="http://kainy-migs.stor.sinaapp.com/original/2201bd030fe674a53f69ccb0862c8b64.jpg" alt=""></a> 手机上打开页面的列表，点击“inspect”开始调试[/caption]</p>
+<p>[caption id=”” align=”alignnone” width=”507”]<a href="http://kainy-migs.stor.sinaapp.com/original/9877ff22b5f74ef5a6450767fcdcf3bc.jpg" target="_blank" rel="external"><img src="http://kainy-migs.stor.sinaapp.com/original/9877ff22b5f74ef5a6450767fcdcf3bc.jpg" alt=""></a> 远程调试Chrome中打开的页面[/caption]</p>
+<p>[caption id=”” align=”alignnone” width=”507”]<a href="http://kainy-migs.stor.sinaapp.com/original/5b3e164808cf6fd89973f38fd9bb101c.jpg" target="_blank" rel="external"><img src="http://kainy-migs.stor.sinaapp.com/original/5b3e164808cf6fd89973f38fd9bb101c.jpg" alt=""></a> 远程调试APP webview中的页面[/caption]</p>
+<p>[caption id=”” align=”alignnone” width=”506”]<a href="http://kainy-migs.stor.sinaapp.com/original/cb87eec44182dd0370992051828be327.jpg" target="_blank" rel="external"><img src="http://kainy-migs.stor.sinaapp.com/original/cb87eec44182dd0370992051828be327.jpg" alt=""></a> 远程调试微信webview中的页面[/caption]</p>
+<p>不将就于console.re模拟调试、不局限于仅满足特定场景的调试方案，要就用最直接的开发工具，做有追求的开发者（追求高效、追求简单、追求纯粹、追求XX… ）。</p>
+<p>迂回妥协的方案如：设置全局开关 然后判断页面运行环境切换开关 虽然也是经验的结晶，但终究影响开发效率和体验。</p>
+<p>面对外部条件和环境给开发带来的不便，我们还是要保持有开发者的初心，而不是以此为理由降低对开发过程和自己的要求，相信有光，于是光就在前方不远处。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://iffe.js.org/blog/blog/2016/01/03/平安内网标装机远程调试安卓webview的方法/" data-id="ciwmxtrj00005ltw4g1ukscn4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/webview/">webview</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/调试/">调试</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2016/01/21/Mac下Chrome浏览器设置跨域/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Mac下Chrome浏览器设置跨域
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/建站❤编程/">建站❤编程</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Node/">Node</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/React/">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/android/">android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webview/">webview</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/培训/">培训</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/持续集成/">持续集成</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/测试/">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/调试/">调试</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Node/" style="font-size: 10px;">Node</a> <a href="/blog/tags/React/" style="font-size: 10px;">React</a> <a href="/blog/tags/android/" style="font-size: 10px;">android</a> <a href="/blog/tags/webview/" style="font-size: 10px;">webview</a> <a href="/blog/tags/培训/" style="font-size: 10px;">培训</a> <a href="/blog/tags/持续集成/" style="font-size: 10px;">持续集成</a> <a href="/blog/tags/框架/" style="font-size: 10px;">框架</a> <a href="/blog/tags/测试/" style="font-size: 10px;">测试</a> <a href="/blog/tags/调试/" style="font-size: 10px;">调试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/06/">六月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/01/">一月 2016</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2016/12/13/ATS ( App Transport Security )是什么，以及如何支持 ATS/">ATS ( App Transport Security )是什么，以及如何支持 ATS</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/11/21/全栈工程师培训笔记/">全栈工程师培训笔记</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/06/21/Android WebView 前端开发调试/">Android WebView 前端开发调试</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/01/21/Mac下Chrome浏览器设置跨域/">Mac下Chrome浏览器设置跨域</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/01/03/平安内网标装机远程调试安卓webview的方法/">平安内网标装机远程调试安卓webview的方法</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+  </div>
+</body>
+</html>
