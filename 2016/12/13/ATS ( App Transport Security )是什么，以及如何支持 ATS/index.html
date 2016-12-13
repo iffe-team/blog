@@ -14,7 +14,7 @@
 <meta property="og:description" content="今天明秋童鞋在需求文档中看到接入任意门需要满足 ATS 标准，我们就来了解了下什么是 ATS ；该标准对 web 开发的影响，及应对措施。
 什么是 ATSApp Transport Security，简称 ATS，是苹果为了提高 App 与服务器之间数据安全，而在 iOS 9 当中首次推出的一项安全特性。在苹果全球开发者大会（WWDC）的一场演示中，该公司公布了一个最后期限——2017 年 1 月">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/4d6e3e3bgw1faowh7bp4bj20s40f8dmb.jpg">
-<meta property="og:updated_time" content="2016-12-13T03:16:57.000Z">
+<meta property="og:updated_time" content="2016-12-13T10:06:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ATS ( App Transport Security )是什么，以及如何支持 ATS">
 <meta name="twitter:description" content="今天明秋童鞋在需求文档中看到接入任意门需要满足 ATS 标准，我们就来了解了下什么是 ATS ；该标准对 web 开发的影响，及应对措施。
@@ -90,7 +90,7 @@ ga('send', 'pageview');
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/blog/categories/建站❤编程/">建站❤编程</a>
+    <a class="article-category-link" href="/blog/categories/科普/">科普</a>
   </div>
 
   </div>
@@ -112,7 +112,8 @@ ga('send', 'pageview');
         <p>今天明秋童鞋在需求文档中看到接入任意门需要满足 ATS 标准，我们就来了解了下什么是 ATS ；该标准对 web 开发的影响，及应对措施。</p>
 <h2 id="什么是-ATS"><a href="#什么是-ATS" class="headerlink" title="什么是 ATS"></a>什么是 ATS</h2><p>App Transport Security，简称 ATS，是苹果为了提高 App 与服务器之间数据安全，而在 iOS 9 当中首次推出的一项安全特性。在苹果全球开发者大会（WWDC）的一场演示中，该公司公布了一个最后期限——2017 年 1 月 1 日——即 App Store 当中的所有应用必须在这个日期之前启用这一重要安全功能。</p>
 <a id="more"></a>
-<p>距离最后期限越来越近，于是开发者们又将收到一波升级需求,不升级的后果图片里面说得比较清楚了</p>
+<p>距离最后期限越来越近，于是开发者们又将收到一波升级需求,不升级的后果图片里面说得比较清楚了。对应工作中的场景，就是版本因达不到接入标准而延期，这时候就不是走个特批就能解决的问题了，因为后面还有一道 App Store 上架的外部审核，要是卡在这里后果就是 App 无法如期上架，全员落水，运营和 iOS 开发哥哥提前表示 “这锅咱不背不背不背啊😭…”</p>
+<p>所以后续如果不幸因 ATS 被“不达标”了，别有被人卡的不爽，应该把这件事看成是一家伟大公司为了保护用户数据安全而做的充满情怀和正义感的事情，嗯 (认真脸)。</p>
 <p><img src="http://ww2.sinaimg.cn/large/4d6e3e3bgw1faowh7bp4bj20s40f8dmb.jpg" alt="昨晚收到的新浪微博开放平台“催命邮件”"></p>
 <h2 id="ATS-的硬性指标："><a href="#ATS-的硬性指标：" class="headerlink" title="ATS 的硬性指标："></a>ATS 的硬性指标：</h2><ol>
 <li>强制使用 https</li>
@@ -147,13 +148,15 @@ ga('send', 'pageview');
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">ssl_protocols</span> TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>; </div><div class="line"><span class="attribute">ssl_ciphers</span> ECDH:AESGCM:HIGH:!RC4:!DH:!MD5:!aNULL:!eNULL;</div></pre></td></tr></table></figure>
 </li>
 <li><p>2.3 Tomcat 要求环境 tomcat7+ 和 JDK1.7+ ，配置参考如下：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"443"</span> <span class="attr">protocol</span>=<span class="string">"org.apache.coyote.http11.Http11Protocol"</span></span></div><div class="line">              <span class="attr">maxThreads</span>=<span class="string">"150"</span> <span class="attr">SSLEnabled</span>=<span class="string">"true"</span> <span class="attr">scheme</span>=<span class="string">"https"</span> <span class="attr">secure</span>=<span class="string">"true"</span></div><div class="line">    <span class="attr">keystoreFile</span>=<span class="string">"keystore/domain.jks"</span>  <span class="attr">keystorePass</span>=<span class="string">"证书密码"</span></div><div class="line">              <span class="attr">clientAuth</span>=<span class="string">"false"</span> <span class="attr">sslProtocol</span>=<span class="string">"TLS"</span></div><div class="line">              <span class="attr">ciphers</span>=<span class="string">"TLS_RSA_WITH_AES_128_GCM_SHA256,</span></div><div class="line">                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,</div><div class="line">                        TLS_RSA_WITH_AES_128_CBC_SHA,</div><div class="line">                        TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,</div><div class="line">                        TLS_RSA_WITH_AES_128_CBC_SHA256,</div><div class="line">                        TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,</div><div class="line">                        SSL_RSA_WITH_3DES_EDE_CBC_SHA,</div><div class="line">                        TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA" /&gt;</div></pre></td></tr></table></figure></li>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"443"</span> <span class="attr">protocol</span>=<span class="string">"org.apache.coyote.http11.Http11Protocol"</span></span></div><div class="line">              <span class="attr">maxThreads</span>=<span class="string">"150"</span> <span class="attr">SSLEnabled</span>=<span class="string">"true"</span> <span class="attr">scheme</span>=<span class="string">"https"</span> <span class="attr">secure</span>=<span class="string">"true"</span></div><div class="line">    <span class="attr">keystoreFile</span>=<span class="string">"keystore/domain.jks"</span>  <span class="attr">keystorePass</span>=<span class="string">"证书密码"</span></div><div class="line">              <span class="attr">clientAuth</span>=<span class="string">"false"</span> <span class="attr">sslProtocol</span>=<span class="string">"TLS"</span></div><div class="line">              <span class="attr">ciphers</span>=<span class="string">"TLS_RSA_WITH_AES_128_GCM_SHA256,</span></div><div class="line">                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,</div><div class="line">                        TLS_RSA_WITH_AES_128_CBC_SHA,</div><div class="line">                        TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,</div><div class="line">                        TLS_RSA_WITH_AES_128_CBC_SHA256,</div><div class="line">                        TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,</div><div class="line">                        SSL_RSA_WITH_3DES_EDE_CBC_SHA,</div><div class="line">                        TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA" /&gt;</div></pre></td></tr></table></figure>
+</li>
 </ul>
+<p>看到这里，你是不是该撸起袖子做些什么，或把本文转给需要它的运维童鞋们 ヽ(；▽；)ノ＼(^-^ ) 。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://iffe.js.org/blog/blog/2016/12/13/ATS ( App Transport Security )是什么，以及如何支持 ATS/" data-id="ciwmxtril0000ltw4wowyq1gj" class="article-share-link">Share</a>
+      <a data-url="https://iffe.js.org/blog/blog/2016/12/13/ATS ( App Transport Security )是什么，以及如何支持 ATS/" data-id="ciwncg7b20000llw46931f6pq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -181,7 +184,7 @@ ga('send', 'pageview');
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/建站❤编程/">建站❤编程</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/建站❤编程/">建站❤编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/科普/">科普</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
