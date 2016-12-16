@@ -84,3 +84,8 @@ DSA 算法要求使用以下加密套件：
   ```
 
 看到这里，你是不是该撸起袖子做些什么，或把本文转给需要它的运维童鞋们 ヽ(；▽；)ノ＼(^-^ ) 。
+
+### 参考：
+
+[苹果ATS检测](https://www.qcloud.com/product/ssl#userDefined10)
+[iOS 9 中可用的受信任根证书列表](https://support.apple.com/zh-cn/HT205205)
