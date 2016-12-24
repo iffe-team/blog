@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Node.js 项目持续集成实践 | IFFE-team</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。
+  这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.js 项目持续集成实践">
+<meta property="og:url" content="https://iffe.js.org/blog/2017/01/03/项目持续集成实践/index.html">
+<meta property="og:site_name" content="IFFE-team">
+<meta property="og:description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。
+  这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnuyxbxij21do0myq8j.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnv43a3rj21dy0n6grg.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnvfto9rj21d00sc7bq.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnv6vy7fj20ug0nk0yb.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnupddu7j20mu0oujuq.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasog9t4wxj21eu0z2qgs.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/4d6e3e3bgw1fb1vq7qshuj218c18gwlb.jpg">
+<meta property="og:updated_time" content="2016-12-24T10:40:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node.js 项目持续集成实践">
+<meta name="twitter:description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。
+  这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
+<meta name="twitter:image" content="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnuyxbxij21do0myq8j.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="IFFE-team" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <!--<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">-->
+
+  <link rel="stylesheet" href="/blog/css/style.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-6311572-4', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">IFFE-team</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">互联网金融前端团队</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://iffe.js.org/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-项目持续集成实践" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2017/01/03/项目持续集成实践/" class="article-date">
+  <time datetime="2017-01-03T10:15:55.000Z" itemprop="datePublished">2017-01-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/blog/categories/建站❤编程/">建站❤编程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Node.js 项目持续集成实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>  前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。</p>
+<p>  这里以开源的 API Mock 系统 AMP 的部署为例（ <a href="https://iffe.leanapp.cn" target="_blank" rel="external">https://iffe.leanapp.cn</a> ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CORS 跨域访问、支持 HTTPS 访问，为前端开发，尤其是移动端开发带来便利。<br><a id="more"></a></p>
+<h2 id="实现的效果"><a href="#实现的效果" class="headerlink" title="实现的效果"></a>实现的效果</h2><p>  本地开发代码，提交到 gitlab 的 master 分支后自动测试和编译，并将编译结果提交到可部署生产的 built 分支，需要的时候一键发布生产。</p>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>  这里用到 gitlab.com 提供的私有代码托管和 git-ci 服务，以及 leancloud 的云引擎。gitlab.com 提供的服务可以使用自己搭建的 gitlab 替换。提供与 leancloud 类似云引擎功能的网站，市面上也不少，这里因为其免费策略合理所以采用，拿它们举例适用性较广。</p>
+<p>  首先我们要在项目根目录添加 <code>gitlab-ci.yml</code> 文件，用于描述持续集成的过程，分三个阶段：</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>  只需要执行 Node.js 应用的测试命令: <code>npm test</code></p>
+  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">test:</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm test</div></pre></td></tr></table></figure>
+<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>  执行 Node.js 应用的构建命令: <code>npm run build</code></p>
+  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">build:</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm run build</div></pre></td></tr></table></figure>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3>  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  stage:</span> deploy</div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> . deploy.sh <span class="comment"># 为了方便脚本执行上下文控制，我们将命令写到 deploy.sh 中</span></div></pre></td></tr></table></figure>
+<p>  <code>deploy.sh</code> 脚本完成两件事：</p>
+<ol>
+<li>执行编译命令</li>
+<li>push 编译代码到 built 分支</li>
+</ol>
+<p>完整配置如下：</p>
+  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># .gitlab-ci.yml</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="attr">image:</span> node:<span class="number">6</span></div><div class="line"></div><div class="line"><span class="comment"># 缓存安装后的 node_modules ，以加速下次构建</span></div><div class="line"><span class="attr">cache:</span></div><div class="line"><span class="attr">  paths:</span> </div><div class="line"><span class="bullet">    -</span> node_modules/</div><div class="line"></div><div class="line"><span class="attr">before_script:</span></div><div class="line"><span class="bullet">  -</span> npm i -D    <span class="comment"># 所有任务执行前都会执行该脚本，用于安装所有依赖包 </span></div><div class="line"></div><div class="line"><span class="comment"># 添加 ‘build' 任务，描述构建任务的执行</span></div><div class="line"><span class="attr">build:</span></div><div class="line"><span class="attr">  stage:</span> build        <span class="comment"># 定义所属阶段</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm run build   <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> build           <span class="comment"># 'build' 任务仅影响 'build' 分支</span></div><div class="line"></div><div class="line"><span class="comment"># 添加 'test' 任务， 描述测试任务的执行</span></div><div class="line"><span class="attr">test:</span></div><div class="line"><span class="attr">  stage:</span> test         <span class="comment"># 定义所属阶段</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm run test    <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  except:</span></div><div class="line"><span class="bullet">    -</span> master          <span class="comment"># 'test' 任务影响除 'master' 分支之外的所有分支</span></div><div class="line"></div><div class="line"><span class="comment"># 添加 'deploy' 任务， 完成构建和部署</span></div><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  stage:</span> deploy</div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> . deploy.sh     <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> master          <span class="comment"># 'deploy' 任务仅影响 'master' 分支</span></div></pre></td></tr></table></figure>
+<p>  由于测试任务由除 master 之外的分支的 push 触发，而部署任务完成后，将编译结果 push 到 built 分支。所以我们 push 到 master 后，会先执行部署任务，部署任务完成后，执行测试任务（如下图）</p>
+<p>  <img src="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnuyxbxij21do0myq8j.jpg" alt="push 操作触发部署、测试任务"></p>
+<p>  任务执行结果：</p>
+<p>  <img src="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnv43a3rj21dy0n6grg.jpg" alt="执行结果"></p>
+<p>  有了构建好的代码，就可以部署到 leancloud 了，部署前我们需要告诉 leancloud 代码库地址，并将 <code>deploy key</code> 信息保存到 gitlab 的项目配置中。这样以后 leancloud 就可以凭 <code>deploy key</code> 向 gitlab 库拉取代码。</p>
+<p>  <img src="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnvfto9rj21d00sc7bq.jpg" alt="在 leancloud 上的“常规设置“中填写代码库地址，并获取 `deploy key`"></p>
+<p>  <img src="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnv6vy7fj20ug0nk0yb.jpg" alt="在 gitlab 上项目的“Deploy Keys“中填写上一步获取的 `deploy key`"></p>
+<p>  两边信息配置完毕，就可以开始部署，在“部署”面版填写“分支或版本号“为 built 即可。</p>
+<p>  <img src="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnupddu7j20mu0oujuq.jpg" alt="在 leancloud 云引擎中选择 built 分支部署"></p>
+<p>  如果一切顺利，部署成功后就可以访问应用了。</p>
+<p>  <img src="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasog9t4wxj21eu0z2qgs.jpg" alt="部署完成访问应用"></p>
+<p>  <em>（请注意：<a href="https://iffe.leanapp.cn" target="_blank" rel="external">演示系统</a>虽然功能 ok，但是运行环境为 leancloud 免费版云引擎，配额受限，请 <strong>不要</strong> 在实际项目中使用， 请使用大师在内网环境部署的。）</em></p>
+<h2 id="解决工作中场景中哪些痛点"><a href="#解决工作中场景中哪些痛点" class="headerlink" title="解决工作中场景中哪些痛点"></a>解决工作中场景中哪些痛点</h2><ol>
+<li><p>无缝版本切换，实现“为跑道上飞驰的赛车更换零件”——在 leancloud 部署应用到生产环境的过程中发现一个有意思的细节，就是新版本构建出问题并不影响线上服务。大致过程类似于在一台新服务器上运行好版本代码，然后把流量从上运行上一版本代码的服务器切过来，在此之前会检测配置的端口是否正常相应请求，如果不是就终止切换，并提示发版失败，发版成功则把“旧版服务器”做存档，以供后续版本回退。有了这一机制，发版本就可以选择最适合业务的时机，而不是非要等到用户量最低的时候，“他好我也好” 😝</p>
+</li>
+<li><p>提前暴露编译配置的问题，实际项目中更改生产构建配置，往往改完当时验证没问题后就不太会留意，而等到真正发版前的一段时间项目文件变动可能产生预料外的问题，这时发现再解决就占用了本已紧张的发版时间，而且需要定位产生问题的代码，这问题在多人协作以及长周期的版本尤其突出。而引入持续集成后，每次 push 将会触发测试环节，在这里加上构建测试，通过测试结果即可及时发现问题并处理。</p>
+</li>
+<li><p>提升开发体验，将一部分消耗资源、重复的、机械性的任务如全量编译，交由持续集成服务器完成，以节约开发机资源，让开发者专注于开发而不受打断。能有空伸个懒腰，发发呆不再是奢求。</p>
+</li>
+</ol>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>  探索“云计算”、”微服务”这些新热技术在前端开发领域的应用场景，对理解“小而美”产品（快速迭代、小步快跑的同时保持新集成特性的稳定输出）存在的基础（支撑点），有推导和借鉴意义。</p>
+<p>  短期内切换应用部署方案显然并不现实，但这并不构成拒绝拥抱变化的充分条件，毕竟技术的发展不因主观意愿而转移，而去中心化和原子化则是越来越突显的两个特征。实际上下半年组内在一些项目中切换 git 做版本管理，并将暴露的问题解决得七七八八已是一个不错的开端。</p>
+<hr>
+<p>  “ 我觉得套路和扯皮救不了中（cheng）国（xu）人（yuan），但技术储备可以 ”</p>
+<p>  <img src="http://ww1.sinaimg.cn/large/4d6e3e3bgw1fb1vq7qshuj218c18gwlb.jpg" alt="我没说过这句话——鲁迅">。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://iffe.js.org/blog/blog/2017/01/03/项目持续集成实践/" data-id="cix33i4ys0004haw40b3x4iky" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Node-js/">Node.js</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/实践/">实践</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/持续集成/">持续集成</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2016/12/13/ATS ( App Transport Security )是什么，以及如何支持 ATS/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ATS ( App Transport Security )是什么，以及如何支持 ATS</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/建站❤编程/">建站❤编程</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/科普小知识/">科普小知识</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Node/">Node</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Node-js/">Node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/React/">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/android/">android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webview/">webview</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/培训/">培训</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/实践/">实践</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/持续集成/">持续集成</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/测试/">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/调试/">调试</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Node/" style="font-size: 10px;">Node</a> <a href="/blog/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/blog/tags/React/" style="font-size: 10px;">React</a> <a href="/blog/tags/android/" style="font-size: 10px;">android</a> <a href="/blog/tags/webview/" style="font-size: 10px;">webview</a> <a href="/blog/tags/培训/" style="font-size: 10px;">培训</a> <a href="/blog/tags/实践/" style="font-size: 10px;">实践</a> <a href="/blog/tags/持续集成/" style="font-size: 20px;">持续集成</a> <a href="/blog/tags/框架/" style="font-size: 10px;">框架</a> <a href="/blog/tags/测试/" style="font-size: 10px;">测试</a> <a href="/blog/tags/调试/" style="font-size: 10px;">调试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/06/">六月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/01/">一月 2016</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2017/01/03/项目持续集成实践/">Node.js 项目持续集成实践</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/12/13/ATS ( App Transport Security )是什么，以及如何支持 ATS/">ATS ( App Transport Security )是什么，以及如何支持 ATS</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/11/21/全栈工程师培训笔记/">全栈工程师培训笔记</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/06/21/Android WebView 前端开发调试/">Android WebView 前端开发调试</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2016/01/21/Mac下Chrome浏览器设置跨域/">Mac下Chrome浏览器设置跨域</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 IFFE Teammates ヽ(；▽；)ノ＼(^-^ )<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.3.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+  </div>
+</body>
+</html>
