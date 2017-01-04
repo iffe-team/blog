@@ -8,7 +8,7 @@ subtitle: 互联网金融前端团队
 description:
 author: IFFE Teammates ヽ(；▽；)ノ＼(^-^ )
 language: zh-cn
-timezone: Asia/Shanghai
+timezone: 
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 ## Themes: http://hexo.io/themes/
-theme: landscape
+theme: icarus
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
