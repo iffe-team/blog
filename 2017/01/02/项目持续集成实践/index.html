@@ -88,7 +88,7 @@ ga('send', 'pageview');
             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -107,10 +107,10 @@ ga('send', 'pageview');
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Entradas',
+            POSTS: 'Posts',
             PAGES: 'Pages',
-            CATEGORIES: 'Categorias',
-            TAGS: 'Etiquetas',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
             UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/blog/',
@@ -135,7 +135,7 @@ ga('send', 'pageview');
                 <td>
                     
     <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
     </div>
 
                 </td>
@@ -155,16 +155,16 @@ ga('send', 'pageview');
             <h2 id="name">IFFE Teammates</h2>
             <h3 id="title">ヽ(；▽；)ノ＼(^-^ )</h3>
             <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
-            <a id="follow" target="_blank" href="https://github.com/iffe-team/">SEGUIR</a>
+            <a id="follow" target="_blank" href="https://github.com/iffe-team/">FOLLOW</a>
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
                 6
-                <span>Entradas</span>
+                <span>posts</span>
             </div>
             <div class="article-info-block">
                 11
-                <span>Etiquetas</span>
+                <span>tags</span>
             </div>
         </div>
         
@@ -269,7 +269,7 @@ ga('send', 'pageview');
         
             
                 <div id="toc" class="toc-article">
-                <strong class="toc-title">Catálogo</strong>
+                <strong class="toc-title">Catalogue</strong>
                     <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现的效果"><span class="toc-number">1.</span> <span class="toc-text">实现的效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现细节"><span class="toc-number">2.</span> <span class="toc-text">实现细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-number">2.1.</span> <span class="toc-text">测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建"><span class="toc-number">2.2.</span> <span class="toc-text">构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署"><span class="toc-number">2.3.</span> <span class="toc-text">部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决工作中场景中哪些痛点"><span class="toc-number">3.</span> <span class="toc-text">解决工作中场景中哪些痛点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-number">4.</span> <span class="toc-text">思考</span></a></li></ol>
                 </div>
             
@@ -279,17 +279,17 @@ ga('send', 'pageview');
 <h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>  这里用到 gitlab.com 提供的私有代码托管和 git-ci 服务，以及 leancloud 的云引擎。gitlab.com 提供的服务可以使用自己搭建的 gitlab 替换。提供与 leancloud 类似云引擎功能的网站，市面上也不少，这里因为其免费策略合理所以采用，拿它们举例适用性较广。</p>
 <p>  首先我们要在项目根目录添加 <code>gitlab-ci.yml</code> 文件，用于描述持续集成的过程，分三个阶段：</p>
 <h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>  只需要执行 Node.js 应用的测试命令: <code>npm test</code></p>
-  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">test:</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm test</div></pre></td></tr></table></figure>
+  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">test:</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">npm</span> <span class="string">test</span></div></pre></td></tr></table></figure>
 <h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>  执行 Node.js 应用的构建命令: <code>npm run build</code></p>
-  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">build:</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm run build</div></pre></td></tr></table></figure>
-<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3>  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  stage:</span> deploy</div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> . deploy.sh <span class="comment"># 为了方便脚本执行上下文控制，我们将命令写到 deploy.sh 中</span></div></pre></td></tr></table></figure>
+  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">build:</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build</span></div></pre></td></tr></table></figure>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3>  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  stage:</span> <span class="string">deploy</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">.</span> <span class="string">deploy.sh</span> <span class="comment"># 为了方便脚本执行上下文控制，我们将命令写到 deploy.sh 中</span></div></pre></td></tr></table></figure>
 <p>  <code>deploy.sh</code> 脚本完成两件事：</p>
 <ol>
 <li>执行编译命令</li>
 <li>push 编译代码到 built 分支</li>
 </ol>
 <p>完整配置如下：</p>
-  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># .gitlab-ci.yml</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="attr">image:</span> node:<span class="number">6</span></div><div class="line"></div><div class="line"><span class="comment"># 缓存安装后的 node_modules ，以加速下次构建</span></div><div class="line"><span class="attr">cache:</span></div><div class="line"><span class="attr">  paths:</span> </div><div class="line"><span class="bullet">    -</span> node_modules/</div><div class="line"></div><div class="line"><span class="attr">before_script:</span></div><div class="line"><span class="bullet">  -</span> npm i -D    <span class="comment"># 所有任务执行前都会执行该脚本，用于安装所有依赖包 </span></div><div class="line"></div><div class="line"><span class="comment"># 添加 ‘build' 任务，描述构建任务的执行</span></div><div class="line"><span class="attr">build:</span></div><div class="line"><span class="attr">  stage:</span> build        <span class="comment"># 定义所属阶段</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm run build   <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> build           <span class="comment"># 'build' 任务仅影响 'build' 分支</span></div><div class="line"></div><div class="line"><span class="comment"># 添加 'test' 任务， 描述测试任务的执行</span></div><div class="line"><span class="attr">test:</span></div><div class="line"><span class="attr">  stage:</span> test         <span class="comment"># 定义所属阶段</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> npm run test    <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  except:</span></div><div class="line"><span class="bullet">    -</span> master          <span class="comment"># 'test' 任务影响除 'master' 分支之外的所有分支</span></div><div class="line"></div><div class="line"><span class="comment"># 添加 'deploy' 任务， 完成构建和部署</span></div><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  stage:</span> deploy</div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> . deploy.sh     <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> master          <span class="comment"># 'deploy' 任务仅影响 'master' 分支</span></div></pre></td></tr></table></figure>
+  <figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># .gitlab-ci.yml</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="attr">image:</span> <span class="attr">node:6</span></div><div class="line"></div><div class="line"><span class="comment"># 缓存安装后的 node_modules ，以加速下次构建</span></div><div class="line"><span class="attr">cache:</span></div><div class="line"><span class="attr">  paths:</span> </div><div class="line"><span class="bullet">    -</span> <span class="string">node_modules/</span></div><div class="line"></div><div class="line"><span class="attr">before_script:</span></div><div class="line"><span class="bullet">  -</span> <span class="string">npm</span> <span class="string">i</span> <span class="bullet">-D</span>    <span class="comment"># 所有任务执行前都会执行该脚本，用于安装所有依赖包 </span></div><div class="line"></div><div class="line"><span class="comment"># 添加 ‘build' 任务，描述构建任务的执行</span></div><div class="line"><span class="attr">build:</span></div><div class="line"><span class="attr">  stage:</span> <span class="string">build</span>        <span class="comment"># 定义所属阶段</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">build</span>   <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">build</span>           <span class="comment"># 'build' 任务仅影响 'build' 分支</span></div><div class="line"></div><div class="line"><span class="comment"># 添加 'test' 任务， 描述测试任务的执行</span></div><div class="line"><span class="attr">test:</span></div><div class="line"><span class="attr">  stage:</span> <span class="string">test</span>         <span class="comment"># 定义所属阶段</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">test</span>    <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  except:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">master</span>          <span class="comment"># 'test' 任务影响除 'master' 分支之外的所有分支</span></div><div class="line"></div><div class="line"><span class="comment"># 添加 'deploy' 任务， 完成构建和部署</span></div><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  stage:</span> <span class="string">deploy</span></div><div class="line"><span class="attr">  script:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">.</span> <span class="string">deploy.sh</span>     <span class="comment"># 需要运行的脚本</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">master</span>          <span class="comment"># 'deploy' 任务仅影响 'master' 分支</span></div></pre></td></tr></table></figure>
 <p>  由于测试任务由除 master 之外的分支的 push 触发，而部署任务完成后，将编译结果 push 到 built 分支。所以我们 push 到 master 后，会先执行部署任务，部署任务完成后，执行测试任务（如下图）</p>
 <p>  <img src="https://ww1.sinaimg.cn/large/4d6e3e3bgw1fasnuyxbxij21do0myq8j.jpg" alt="push 操作触发部署、测试任务"></p>
 <p>  任务执行结果：</p>
@@ -325,7 +325,7 @@ ga('send', 'pageview');
 
 </div>
 
-    <a data-url="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/" data-id="cj2fijyzw0007ybyu4b4sbb35" class="article-share-link"><i class="fa fa-share"></i>Compartir</a>
+    <a data-url="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/" data-id="cj2fozl8f0007k6yu43nlh3yw" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -393,7 +393,7 @@ ga('send', 'pageview');
 
             
     
-        <a href="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/">Comentarios</a>
+        <a href="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/">Comments</a>
     
 
         </footer>
@@ -404,7 +404,7 @@ ga('send', 'pageview');
     
     
         <a href="/blog/2016/12/13/ATS ( App Transport Security )是什么，以及如何支持 ATS/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Más viejo</strong>
+            <strong class="article-nav-caption">Older</strong>
             <div class="article-nav-title">ATS ( App Transport Security )是什么，以及如何支持 ATS</div>
         </a>
     
@@ -432,7 +432,7 @@ ga('send', 'pageview');
    
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Recientes</h3>
+        <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
                 
@@ -538,7 +538,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Categorias</h3>
+        <h3 class="widget-title">categories</h3>
         <div class="widget">
             <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/建站❤编程/">建站❤编程</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/科普小知识/">科普小知识</a><span class="category-list-count">1</span></li></ul>
         </div>
@@ -547,7 +547,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Archivos</h3>
+        <h3 class="widget-title">archives</h3>
         <div class="widget">
             <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/06/">六月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/01/">一月 2016</a><span class="archive-list-count">2</span></li></ul>
         </div>
@@ -556,7 +556,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Etiquetas</h3>
+        <h3 class="widget-title">tags</h3>
         <div class="widget">
             <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Node/">Node</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Node-js/">Node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/React/">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/android/">android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webview/">webview</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/培训/">培训</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/实践/">实践</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/持续集成/">持续集成</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/测试/">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/调试/">调试</a><span class="tag-list-count">1</span></li></ul>
         </div>
@@ -565,7 +565,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Nube de etiquetas</h3>
+        <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
             <a href="/blog/tags/Node/" style="font-size: 10px;">Node</a> <a href="/blog/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/blog/tags/React/" style="font-size: 10px;">React</a> <a href="/blog/tags/android/" style="font-size: 10px;">android</a> <a href="/blog/tags/webview/" style="font-size: 10px;">webview</a> <a href="/blog/tags/培训/" style="font-size: 10px;">培训</a> <a href="/blog/tags/实践/" style="font-size: 10px;">实践</a> <a href="/blog/tags/持续集成/" style="font-size: 20px;">持续集成</a> <a href="/blog/tags/框架/" style="font-size: 10px;">框架</a> <a href="/blog/tags/测试/" style="font-size: 10px;">测试</a> <a href="/blog/tags/调试/" style="font-size: 10px;">调试</a>
         </div>
@@ -574,7 +574,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">Links</h3>
+        <h3 class="widget-title">links</h3>
         <div class="widget">
             <ul>
                 
