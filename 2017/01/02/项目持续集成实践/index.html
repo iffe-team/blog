@@ -5,20 +5,18 @@
     
     <title>Node.js 项目持续集成实践 | IFFE-team</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。
-  这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
+    <meta name="description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。   这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
+<meta name="keywords" content="持续集成,实践,Node.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Node.js 项目持续集成实践">
 <meta property="og:url" content="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/index.html">
 <meta property="og:site_name" content="IFFE-team">
-<meta property="og:description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。
-  这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
+<meta property="og:description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。   这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
 <meta property="og:image" content="http://blog.zhangruipeng.me/hexo-theme-icarus/gallery/shoes.jpg">
 <meta property="og:updated_time" content="2017-05-05T09:59:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 项目持续集成实践">
-<meta name="twitter:description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。
-  这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
+<meta name="twitter:description" content="前端开发流程（ 语法检查、编译、重载）的自动化我们在工作中已经用得比较溜了，这篇文章主要介绍 Node.js 应用部署到服务端过程（编译、测试）的自动化。   这里以开源的 API Mock 系统 AMP 的部署为例（ https://iffe.leanapp.cn ），通过这套系统提供的 mock 服务，前端可以在接口定义完毕后就着手开发，与后端接口开发并行以提升项目整体效率。接口支持 CO">
 <meta name="twitter:image" content="http://blog.zhangruipeng.me/hexo-theme-icarus/gallery/shoes.jpg">
     
 
@@ -90,7 +88,7 @@ ga('send', 'pageview');
             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -109,10 +107,10 @@ ga('send', 'pageview');
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Posts',
+            POSTS: 'Entradas',
             PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
+            CATEGORIES: 'Categorias',
+            TAGS: 'Etiquetas',
             UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/blog/',
@@ -137,7 +135,7 @@ ga('send', 'pageview');
                 <td>
                     
     <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
     </div>
 
                 </td>
@@ -157,16 +155,16 @@ ga('send', 'pageview');
             <h2 id="name">IFFE Teammates</h2>
             <h3 id="title">ヽ(；▽；)ノ＼(^-^ )</h3>
             <span id="location"><i class="fa fa-map-marker"></i>Shenzhen, China</span>
-            <a id="follow" target="_blank" href="https://github.com/iffe-team/">FOLLOW</a>
+            <a id="follow" target="_blank" href="https://github.com/iffe-team/">SEGUIR</a>
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
                 6
-                <span>posts</span>
+                <span>Entradas</span>
             </div>
             <div class="article-info-block">
                 11
-                <span>tags</span>
+                <span>Etiquetas</span>
             </div>
         </div>
         
@@ -240,6 +238,12 @@ ga('send', 'pageview');
         <i class="fa fa-calendar"></i>
         <a href="/blog/2017/01/02/项目持续集成实践/">
             <time datetime="2017-01-01T18:15:55.000Z" itemprop="datePublished">2017-01-02</time>
+             | 
+            <i class="fa fa-user"></i>KainyGuo
+            <!-- | 
+            <i class="fa fa-user"></i>作者：KainyGuo
+             | 
+            <i class="fa fa-users"></i>贡献者：KainyGuo -->
         </a>
     </div>
 
@@ -265,7 +269,7 @@ ga('send', 'pageview');
         
             
                 <div id="toc" class="toc-article">
-                <strong class="toc-title">Catalogue</strong>
+                <strong class="toc-title">Catálogo</strong>
                     <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现的效果"><span class="toc-number">1.</span> <span class="toc-text">实现的效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现细节"><span class="toc-number">2.</span> <span class="toc-text">实现细节</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-number">2.1.</span> <span class="toc-text">测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建"><span class="toc-number">2.2.</span> <span class="toc-text">构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署"><span class="toc-number">2.3.</span> <span class="toc-text">部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决工作中场景中哪些痛点"><span class="toc-number">3.</span> <span class="toc-text">解决工作中场景中哪些痛点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-number">4.</span> <span class="toc-text">思考</span></a></li></ol>
                 </div>
             
@@ -321,7 +325,7 @@ ga('send', 'pageview');
 
 </div>
 
-    <a data-url="https://iffe.js.org/blog/blog/2017/01/02/项目持续集成实践/" data-id="cj2bocjff00079eyuq8hwcbln" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/" data-id="cj2fijyzw0007ybyu4b4sbb35" class="article-share-link"><i class="fa fa-share"></i>Compartir</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -389,7 +393,7 @@ ga('send', 'pageview');
 
             
     
-        <a href="https://iffe.js.org/blog/blog/2017/01/02/项目持续集成实践/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://iffe.js.org/blog/blog/2017/01/02/项目持续集成实践/">Comments</a>
+        <a href="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://iffe.js.org/blog/2017/01/02/项目持续集成实践/">Comentarios</a>
     
 
         </footer>
@@ -400,7 +404,7 @@ ga('send', 'pageview');
     
     
         <a href="/blog/2016/12/13/ATS ( App Transport Security )是什么，以及如何支持 ATS/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Older</strong>
+            <strong class="article-nav-caption">Más viejo</strong>
             <div class="article-nav-title">ATS ( App Transport Security )是什么，以及如何支持 ATS</div>
         </a>
     
@@ -428,7 +432,7 @@ ga('send', 'pageview');
    
         
     <div class="widget-wrap">
-        <h3 class="widget-title">recent</h3>
+        <h3 class="widget-title">Recientes</h3>
         <div class="widget">
             <ul id="recent-post" class="">
                 
@@ -534,7 +538,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">categories</h3>
+        <h3 class="widget-title">Categorias</h3>
         <div class="widget">
             <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/建站❤编程/">建站❤编程</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/科普小知识/">科普小知识</a><span class="category-list-count">1</span></li></ul>
         </div>
@@ -543,7 +547,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">archives</h3>
+        <h3 class="widget-title">Archivos</h3>
         <div class="widget">
             <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/06/">六月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2016/01/">一月 2016</a><span class="archive-list-count">2</span></li></ul>
         </div>
@@ -552,7 +556,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">tags</h3>
+        <h3 class="widget-title">Etiquetas</h3>
         <div class="widget">
             <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Node/">Node</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Node-js/">Node.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/React/">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/android/">android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webview/">webview</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/培训/">培训</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/实践/">实践</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/持续集成/">持续集成</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/框架/">框架</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/测试/">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/调试/">调试</a><span class="tag-list-count">1</span></li></ul>
         </div>
@@ -561,7 +565,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">tag cloud</h3>
+        <h3 class="widget-title">Nube de etiquetas</h3>
         <div class="widget tagcloud">
             <a href="/blog/tags/Node/" style="font-size: 10px;">Node</a> <a href="/blog/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/blog/tags/React/" style="font-size: 10px;">React</a> <a href="/blog/tags/android/" style="font-size: 10px;">android</a> <a href="/blog/tags/webview/" style="font-size: 10px;">webview</a> <a href="/blog/tags/培训/" style="font-size: 10px;">培训</a> <a href="/blog/tags/实践/" style="font-size: 10px;">实践</a> <a href="/blog/tags/持续集成/" style="font-size: 20px;">持续集成</a> <a href="/blog/tags/框架/" style="font-size: 10px;">框架</a> <a href="/blog/tags/测试/" style="font-size: 10px;">测试</a> <a href="/blog/tags/调试/" style="font-size: 10px;">调试</a>
         </div>
@@ -570,7 +574,7 @@ ga('send', 'pageview');
     
         
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">links</h3>
+        <h3 class="widget-title">Links</h3>
         <div class="widget">
             <ul>
                 
@@ -601,7 +605,7 @@ ga('send', 'pageview');
     <script>
     var disqus_config = function () {
         
-            this.page.url = 'https://iffe.js.org/blog/blog/2017/01/02/项目持续集成实践/';
+            this.page.url = 'https://iffe.js.org/blog/2017/01/02/项目持续集成实践/';
         
         this.page.identifier = '项目持续集成实践';
     };
