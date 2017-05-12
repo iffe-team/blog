@@ -5,8 +5,8 @@
   "background_color": "#f37321",
   "display": "minimal-ui",
   "orientation": "portrait",
-  "Scope": "./",
-  "start_url": "./",
+  "Scope": "/blog/",
+  "start_url": "/blog/",
   "icons": [
     {
       "src": "./icons/icon-72x72.png",
