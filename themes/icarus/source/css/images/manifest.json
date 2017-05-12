@@ -1,9 +1,9 @@
 {
   "name": "平安互联网金融前端开发团队",
-  "short_name": "IFFE Team",
+  "short_name": "前端团队",
   "theme_color": "#2196f3",
   "background_color": "#f37321",
-  "display": "minimal-ui",
+  "display": "Standalone",
   "orientation": "portrait",
   "Scope": "/blog/",
   "start_url": "/blog/",
